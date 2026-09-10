@@ -1,0 +1,33 @@
+[project]
+name = "resilicapture"
+version = "0.7.0"
+description = "Local-first Windows screen recorder with recoverable segments, verified saves, and long-timelapse support"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { text = "MIT" }
+keywords = ["screen-recorder", "windows", "ffmpeg", "timelapse", "screen-capture", "local-first", "recovery"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Win32 (MS Windows)",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: Microsoft :: Windows :: Windows 10",
+  "Operating System :: Microsoft :: Windows :: Windows 11",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Multimedia :: Video :: Capture",
+]
+dependencies = [
+  "mss>=10.1.0,<11",
+  "opencv-python>=4.10.0,<5",
+  "numpy>=2.1.0,<3",
+  "Pillow>=11.0.0,<13",
+  "pynput>=1.7.7,<2",
+  "pystray>=0.19.5,<1",
+]
+
+[tool.resilicapture]
+release-channel = "beta"
+production-rule = "Never report success before final media verification; never delete recoverable source segments because finalization failed."
+legacy-product = "FocusFlow Recorder 0.6.x"

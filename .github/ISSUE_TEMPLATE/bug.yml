@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a reproducible ResiliCapture failure
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe what you expected and what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Start...\n2. Record...\n3. Stop..."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: ResiliCapture version
+      placeholder: 0.7.0
+    validations:
+      required: true
+  - type: dropdown
+    id: windows
+    attributes:
+      label: Windows version
+      options: [Windows 10, Windows 11, Other]
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostic report
+      description: Use Diagnostics in ResiliCapture to create a sanitized ZIP, then attach it. Never attach recordings containing private information.

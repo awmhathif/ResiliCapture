@@ -1,0 +1,75 @@
+RESILICAPTURE 0.7.0 SOURCE VALIDATION REPORT
+============================================
+
+PACKAGE TYPE
+- Python source package for Windows
+- PyInstaller one-folder Windows build configuration
+- Beta / production-hardening release
+- Rebrand/upgrade path from FocusFlow Recorder 0.6.x
+
+IMPLEMENTED IN THIS BUILD
+- Normal and timelapse recording
+- Display, selected-area, and visible-window capture
+- Compact draggable recording toolbar
+- Pause/resume, screenshot, optional live focus, and Stop
+- Close-to-system-tray lifecycle with explicit recording-safe Exit
+- Fast sealed-segment finalization
+- Append-only segment/event journals
+- Separate stats/finalization checkpoints
+- Finalization disk-space safety check
+- Beginning/end decode verification for final MP4s
+- Screen-text optimized H.264 quality presets (Quality + 100% native defaults)
+- Hardware H.264 -> software H.264 -> MJPEG fallback
+- Adaptive long-session recovery chunks
+- Privacy-sanitized diagnostic ZIP creation
+- Unclean-shutdown, thread, Tk callback, and native-fault logging
+- Legacy FocusFlow settings import without deleting legacy data
+- Recovery scanning for both .resilicapture_sessions and .focusflow_sessions
+- GitHub Actions tests/build smoke/release workflows and Dependabot
+- Security/privacy/contribution/support/roadmap/repository-setup documentation
+- Current UI preview plus 1280x640 social preview
+
+VALIDATION COMPLETED IN THIS ENVIRONMENT
+- Python compilation passed
+- 32 automated tests passed before final packaging
+- FFmpeg segment encoding passed
+- Mixed-encoder normalization passed
+- Fast finalization scaling test passed
+- Normal worker integration passed
+- Timelapse worker integration passed
+- Live zoom/spotlight/return tests passed
+- Append-only journal/truncated-tail tests passed
+- Low-disk finalization refusal test passed
+- X-to-tray / explicit Exit lifecycle tests passed
+- Tray-hidden finalization progress test passed
+- Diagnostic privacy/exclusion test passed
+- Native/no-resample, Lanczos, quality-preset, and fidelity-migration tests passed
+- Legacy FocusFlow settings import test passed
+- Legacy .focusflow_sessions discovery test passed
+- Release metadata/social-preview consistency tests passed
+
+WINDOWS BUILD NOTE
+A trustworthy Windows .exe should be compiled and tested on Windows. Run build_windows.bat to create:
+
+  dist\ResiliCapture\ResiliCapture.exe
+  dist\ResiliCapture-0.7.0-Windows.zip
+  dist\ResiliCapture-0.7.0-Windows.zip.sha256
+
+The build script runs compilation/tests before PyInstaller packaging and UPX is disabled.
+
+PUBLIC REPOSITORY PREP
+- Recommended repository metadata/topics: REPOSITORY_SETUP.md
+- GitHub social preview: docs/social-preview.png
+- UI preview: docs/app-preview.png
+- Public beta release notes: docs/release-notes-v0.7.0-beta.md
+- Tagged release workflow: .github/workflows/release.yml
+
+REMAINING 1.0 GATES
+- Separate recorder/finalizer process isolation from the GUI
+- 12-24 hour Windows soak testing on real hardware
+- NVENC/QSV/AMF hardware matrix
+- Signed installer / Authenticode strategy
+- Final FFmpeg redistribution/compliance decision
+
+CURRENT LIMITATIONS
+See KNOWN_LIMITATIONS.md.

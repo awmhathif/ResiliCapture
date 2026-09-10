@@ -1,0 +1,85 @@
+name: release
+
+"on":
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install FFmpeg for tests only
+        shell: powershell
+        run: choco install ffmpeg -y --no-progress
+
+      - name: Install build dependencies
+        run: python -m pip install -r requirements-build.txt
+
+      - name: Validate tag matches application version
+        shell: powershell
+        run: |
+          $version = python -c "from recorder.config import APP_VERSION; print(APP_VERSION)"
+          $expected = "v$version-beta"
+          if ($env:GITHUB_REF_NAME -ne $expected) {
+            throw "Tag $env:GITHUB_REF_NAME does not match expected beta tag $expected"
+          }
+          "APP_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Compile and test
+        shell: powershell
+        run: |
+          python -m compileall -q app.py recorder ui platform_tools tests
+          python -m unittest discover -s tests -v
+
+      - name: Build portable Windows app
+        run: python -m PyInstaller --noconfirm --clean ResiliCapture.spec
+
+      - name: Package and checksum
+        shell: powershell
+        run: |
+          $zip = "ResiliCapture-$env:APP_VERSION-Windows.zip"
+          Compress-Archive -Path "dist\ResiliCapture\*" -DestinationPath $zip -Force
+          $hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+          Set-Content -Encoding ascii "$zip.sha256" "$hash  $zip"
+          Set-Content -Encoding utf8 "RELEASE-BUILD-NOTE.txt" "This automated portable build does not intentionally copy the Chocolatey FFmpeg test installation into the ResiliCapture package. Check bin/ in the artifact and THIRD_PARTY_NOTICES.md before redistribution."
+
+      - uses: actions/attest@v4
+        with:
+          subject-path: |
+            ResiliCapture-${{ env.APP_VERSION }}-Windows.zip
+            ResiliCapture-${{ env.APP_VERSION }}-Windows.zip.sha256
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ResiliCapture-${{ env.APP_VERSION }}-Windows
+          path: |
+            ResiliCapture-${{ env.APP_VERSION }}-Windows.zip
+            ResiliCapture-${{ env.APP_VERSION }}-Windows.zip.sha256
+            RELEASE-BUILD-NOTE.txt
+
+      - name: Create GitHub prerelease
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$env:GITHUB_REF_NAME" `
+            "ResiliCapture-$env:APP_VERSION-Windows.zip" `
+            "ResiliCapture-$env:APP_VERSION-Windows.zip.sha256" `
+            "RELEASE-BUILD-NOTE.txt" `
+            --title "ResiliCapture $env:APP_VERSION Beta" `
+            --notes-file "docs/release-notes-v0.7.0-beta.md" `
+            --prerelease

@@ -1,0 +1,65 @@
+RESILICAPTURE 0.7.0 BETA
+========================
+
+WHAT THIS IS
+ResiliCapture is a local-first Windows screen recorder focused on reliable long recordings and timelapses. It writes recoverable sealed chunks and does not report success until the final output has been verified.
+
+UPGRADING FROM FOCUSFLOW RECORDER 0.6.x
+- ResiliCapture is the renamed continuation of FocusFlow Recorder.
+- If ResiliCapture has no settings yet, it imports the old FocusFlow settings on first launch.
+- The old FocusFlow app-data folder is left untouched.
+- New sessions use .resilicapture_sessions.
+- Recovery scans BOTH .resilicapture_sessions and legacy .focusflow_sessions.
+
+RUN FROM SOURCE
+1. Extract this folder.
+2. Run install_dev.bat.
+3. Put ffmpeg.exe and ffprobe.exe in bin\ (strongly recommended), or make them available on PATH.
+4. Run run.bat.
+
+BUILD THE WINDOWS EXE
+1. Install Python 3.11-3.13 on Windows.
+2. Put ffmpeg.exe and ffprobe.exe in bin\ only if you have reviewed the redistribution obligations for that exact build.
+3. Run build_windows.bat.
+4. The script runs tests before building and creates a versioned ZIP plus SHA-256 checksum.
+5. Open dist\ResiliCapture\ResiliCapture.exe.
+
+SYSTEM TRAY
+- Clicking the main-window X sends ResiliCapture to the system tray; it does NOT fully exit.
+- Tray actions: Show ResiliCapture, Pause / Resume, Stop & Save, Open Recordings, Exit ResiliCapture.
+- Exit ResiliCapture is the explicit full-shutdown command.
+- If a recording is active, Exit can stop/save first and close only after verification.
+- If tray integration is unavailable, X minimizes to the taskbar instead of making the app unreachable.
+
+SHARPNESS
+- Fresh installs use 100% native recording size and Quality.
+- The one-time fidelity migration introduced in FocusFlow Recorder 0.6.1 is retained for older settings.
+- Balanced/Quality/Near lossless use screen-text-oriented CRF/CQ values 18/15/10.
+- Reduced-size recording uses Lanczos and is clearly labeled as downscaled.
+- Normal finalization is stream-copy, so saving does not re-encode the video.
+
+LONG-SESSION SAFETY
+- Recovery metadata is append-only in segments.jsonl.
+- Session events are append-only in events.jsonl.
+- Live stats use a small stats.json checkpoint.
+- Finalization progress is persisted in finalization.json.
+- The finalizer refuses to start when the destination obviously lacks enough headroom for the final copy.
+- A truncated final journal append after a crash does not invalidate earlier sealed records.
+- Final MP4 verification can decode frames near the beginning and end before reporting success.
+
+DIAGNOSTICS
+The Diagnostics button can create a privacy-sanitized ZIP for GitHub issues. It excludes video, screenshots, and known full user paths.
+
+SHORTCUTS
+F9  Record / stop
+F10 Pause / resume
+F6  Focus / return
+F8  Screenshot
+
+IMPORTANT
+- This remains a beta; recorder/finalizer process isolation is still a 1.0 gate.
+- There is no live screen preview; this reduces recorder load.
+- This release records video only; microphone/system audio are not included.
+- Window capture is rectangle-based; keep the selected window visible.
+- Review THIRD_PARTY_NOTICES.md before redistributing FFmpeg binaries.
+- See REPOSITORY_SETUP.md before creating the public GitHub repository/release.
