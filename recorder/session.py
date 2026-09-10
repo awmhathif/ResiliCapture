@@ -14,6 +14,31 @@ from .config import APP_DISPLAY_NAME, SESSION_DIR_NAME
 from .models import RecordingOptions, RecordingState
 
 
+class _PerWriteFileHandler(logging.Handler):
+    """Logging handler that never keeps the session log file open.
+
+    Windows does not allow deleting a file while another process still has an
+    open handle to it. Tests and recovery tooling frequently create temporary
+    session folders, so keeping a FileHandler alive can make those folders
+    undeletable until interpreter shutdown. Opening the log only for each emit
+    avoids that lock while preserving the same on-disk log format.
+    """
+
+    def __init__(self, path: Path) -> None:
+        super().__init__()
+        self.path = Path(path)
+
+    def emit(self, record: logging.LogRecord) -> None:
+        try:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            message = self.format(record)
+            with self.path.open("a", encoding="utf-8") as handle:
+                handle.write(message + "\n")
+                handle.flush()
+        except Exception:
+            self.handleError(record)
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -106,7 +131,7 @@ class RecordingSession:
         self.logger.setLevel(logging.INFO)
         self.logger.propagate = False
         if not self.logger.handlers:
-            handler = logging.FileHandler(self.log_path, encoding="utf-8")
+            handler = _PerWriteFileHandler(self.log_path)
             handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
             self.logger.addHandler(handler)
         self._write_manifest()
