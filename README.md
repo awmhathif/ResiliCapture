@@ -1,5 +1,8 @@
 # ResiliCapture
 
+[![Windows tests](https://github.com/awmhathif/ResiliCapture/actions/workflows/test.yml/badge.svg)](https://github.com/awmhathif/ResiliCapture/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.txt)
+
 **A local-first Windows screen recorder designed not to lose long recordings.**
 
 ResiliCapture records normal screen video and long timelapses using independently sealed recovery chunks, then verifies the final MP4 before it reports success. There is no account, no cloud upload, and no mandatory editor/export step.
@@ -86,15 +89,6 @@ On Stop:
 5. Only then is the temporary output atomically renamed to the final filename and reported as **Saved and verified**.
 
 If finalization fails, the sealed chunks are retained for recovery.
-
-## Upgrade from FocusFlow Recorder
-
-ResiliCapture is the continuation/rebrand of **FocusFlow Recorder 0.6.x**.
-
-- On first launch, if ResiliCapture has no settings yet, it can import the existing FocusFlow Recorder settings from the legacy app-data folder.
-- New recovery sessions use `.resilicapture_sessions`.
-- The Recovery Center scans both `.resilicapture_sessions` **and legacy `.focusflow_sessions`**, so old interrupted recordings remain recoverable without moving or rewriting them.
-- The old FocusFlow app-data/session folders are intentionally left untouched for rollback and manual recovery.
 
 ## System tray behavior
 
@@ -188,7 +182,16 @@ The test suite covers recording/finalization, timelapse, live focus, quality def
 test_windows.bat
 ```
 
-GitHub Actions configuration is under `.github/workflows/`.
+GitHub Actions validates the project on Windows with Python 3.11, 3.12, and 3.13 and also performs a PyInstaller package smoke build.
+
+## Migrating from pre-release FocusFlow builds
+
+ResiliCapture is the continuation/rebrand of the earlier **FocusFlow Recorder 0.6.x** pre-release builds.
+
+- On first launch, if ResiliCapture has no settings yet, it can import existing FocusFlow Recorder settings from the legacy app-data folder.
+- New recovery sessions use `.resilicapture_sessions`.
+- The Recovery Center scans both `.resilicapture_sessions` **and legacy `.focusflow_sessions`**, so old interrupted recordings remain recoverable without moving or rewriting them.
+- Old FocusFlow app-data/session folders are intentionally left untouched for rollback and manual recovery.
 
 ## Project principles
 
