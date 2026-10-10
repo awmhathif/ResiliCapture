@@ -5,4 +5,5 @@ build/
 dist/
 *.spec.bak
 bin/*.exe
+bin/ffmpeg-notices/
 !bin/.gitkeep

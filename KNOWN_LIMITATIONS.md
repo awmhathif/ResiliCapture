@@ -13,5 +13,5 @@
 11. **Global hotkeys can be blocked:** security tools, elevated applications, or other programs may intercept F-key shortcuts.
 12. **Tray support depends on the Windows shell/pystray backend:** if tray initialization fails, X falls back to taskbar minimization rather than hiding the application completely.
 13. **No signed installer yet:** the repository builds a portable one-folder application; Authenticode signing/installer work remains before a 1.0 public production release.
-14. **No prebuilt Windows executable is included in this source ZIP:** build on Windows with `build_windows.bat`.
+14. **Portable distribution:** download the complete `ResiliCapture-0.7.0-Windows.zip` release asset and extract it. The standalone one-folder EXE needs `_internal`; GitHub's source-code ZIP requires Python/building. FFmpeg setup is a separate download provided by `setup_ffmpeg.bat`.
 15. **Long Windows soak testing still required:** 12–24 hour real-hardware tests and NVENC/QSV/AMF matrices are release-gate work before 1.0.

@@ -13,7 +13,12 @@ for /f "delims=" %%F in ('where ffmpeg') do (
   goto :ffmpeg_done
 )
 :ffmpeg_done
-where ffprobe >nul 2>nul && for /f "delims=" %%F in ('where ffprobe') do (
+where ffprobe >nul 2>nul || (
+  echo FFprobe was not found on PATH. Run setup_ffmpeg.bat instead.
+  pause
+  exit /b 1
+)
+for /f "delims=" %%F in ('where ffprobe') do (
   copy /y "%%F" "bin\ffprobe.exe" >nul
   goto :ffprobe_done
 )

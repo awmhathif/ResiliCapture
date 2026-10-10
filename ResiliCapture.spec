@@ -1,10 +1,11 @@
 # -*- mode: python ; coding: utf-8 -*-
+import os
 from pathlib import Path
 from PyInstaller.utils.hooks import collect_submodules
 
 project = Path(SPECPATH)
 binaries = []
-for name in ("ffmpeg.exe", "ffprobe.exe"):
+for name in (("ffmpeg.exe", "ffprobe.exe") if os.environ.get("RESILICAPTURE_BUNDLE_FFMPEG") == "1" else ()):
     candidate = project / "bin" / name
     if candidate.exists():
         binaries.append((str(candidate), "bin"))

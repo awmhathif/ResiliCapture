@@ -1,0 +1,30 @@
+ResiliCapture 0.7.0 Beta - Windows 10/11, 64-bit (Intel/AMD)
+
+1. Extract the entire ZIP with Windows "Extract All".
+2. Open the extracted ResiliCapture folder.
+3. Double-click setup_ffmpeg.bat once (internet required, about 104 MB).
+   It downloads a pinned, SHA-256 verified FFmpeg build directly from gyan.dev
+   into this folder. No Python, administrator rights, or PATH edits are needed.
+4. Double-click ResiliCapture.exe. Choose where to save, then press Record.
+
+Keep ResiliCapture.exe and the _internal folder together. Do not copy just
+the EXE, or launch it inside the ZIP. The EXE is a portable app, not an installer.
+
+FFmpeg setup is recommended for H.264, MP4 verification and recovery. Without
+it (or compatible FFmpeg/FFprobe already on PATH), the app uses a larger MJPEG
+fallback with reduced verification/recovery capabilities. Restart the app
+after installing FFmpeg.
+
+If setup cannot download, obtain a Windows essentials build from
+https://www.gyan.dev/ffmpeg/builds/ and place ffmpeg.exe and ffprobe.exe in bin.
+
+This beta is unsigned, so Windows may show a publisher/SmartScreen warning.
+Verify the release source and ZIP SHA-256 before deciding whether to run it.
+Do not disable Windows security. There is no microphone/system audio yet.
+
+Closing X sends the app to the tray. Use tray > Exit ResiliCapture to quit.
+Recordings and settings are not stored in the application folder by default.
+
+Downloads: https://github.com/awmhathif/ResiliCapture/releases
+Help: https://github.com/awmhathif/ResiliCapture/issues
+Privacy, limits and third-party licenses are included in this folder.

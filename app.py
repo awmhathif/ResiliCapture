@@ -134,4 +134,15 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    if "--self-test" in sys.argv:
+        import argparse
+        from recorder.package_check import run_package_check
+
+        parser = argparse.ArgumentParser(description="Check the packaged app with synthetic video")
+        parser.add_argument("--self-test", action="store_true")
+        parser.add_argument("--report", type=Path, required=True)
+        parser.add_argument("--require-ffmpeg", action="store_true")
+        args = parser.parse_args()
+        raise SystemExit(run_package_check(args.report, require_ffmpeg=args.require_ffmpeg))
+    else:
+        main()

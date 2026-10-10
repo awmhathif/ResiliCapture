@@ -12,13 +12,37 @@ ResiliCapture records normal screen video and long timelapses using independentl
 </p>
 
 <p align="center">
-  <a href="../../releases/latest"><strong>Download the latest Windows release</strong></a>
+  <a href="https://github.com/awmhathif/ResiliCapture/releases/tag/v0.7.0-beta"><strong>Download for Windows · 0.7.0 Beta</strong></a>
   · <a href="PRIVACY.md">Privacy</a>
   · <a href="SECURITY.md">Security</a>
   · <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
 > **Beta status — v0.7.0.** The recorder/recovery model is functional and covered by automated tests, but 1.0 is reserved for process isolation plus long Windows soak/hardware-matrix testing. See [Roadmap](ROADMAP.md).
+
+## Download and start
+
+For **Windows 10/11, 64-bit Intel/AMD**. No Python or administrator rights are required.
+
+1. Open the [0.7.0 Beta release](https://github.com/awmhathif/ResiliCapture/releases/tag/v0.7.0-beta) and download **`ResiliCapture-0.7.0-Windows.zip`** under **Assets**. GitHub's **Source code** downloads are for developers.
+2. Right-click the ZIP → **Extract All**, then open the extracted `ResiliCapture` folder.
+3. Run **`setup_ffmpeg.bat`** once for H.264 recording, MP4 verification, and recovery. It downloads a pinned, checksum-verified FFmpeg build directly from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) into the app's `bin` folder (internet required, about 104 MB). Restart the app if it was already running.
+4. Run **`ResiliCapture.exe`**, choose your save folder, and press **Record**.
+
+Keep the EXE and `_internal` folder together. **The EXE alone is not a complete download.** This is a portable app, not an installer; launch it after extraction. If the release only shows a standalone EXE, the complete ZIP has not been uploaded yet.
+
+FFmpeg is downloaded separately; without FFmpeg/FFprobe in `bin` or on PATH, the app has larger MJPEG output and reduced verification/recovery. Offline setup instructions are in [START-HERE.txt](START-HERE.txt).
+
+The beta is unsigned, so Windows may show an unknown-publisher/SmartScreen warning. Check the release source and checksum before deciding whether to run it; do not disable Windows security. This release records video only, without microphone/system audio.
+
+Optional download verification, from the folder containing the ZIP and its `.sha256` file:
+
+```powershell
+(Get-FileHash .\ResiliCapture-0.7.0-Windows.zip -Algorithm SHA256).Hash
+Get-Content .\ResiliCapture-0.7.0-Windows.zip.sha256
+```
+
+The hashes must match (letter case does not matter).
 
 ## Why ResiliCapture?
 
@@ -153,7 +177,7 @@ For local bundled builds, place `ffmpeg.exe` and `ffprobe.exe` under `bin\`. Do 
 build_windows.bat
 ```
 
-The build script installs build dependencies, compiles sources, runs the automated suite, builds a PyInstaller one-folder app, creates the Windows ZIP, and writes SHA-256.
+Use 64-bit Python. The build script installs build dependencies, compiles sources, runs the automated suite, builds a PyInstaller one-folder app, creates the complete Windows ZIP with setup/help/license files, extracts it into a temporary folder, and runs the packaged EXE against synthetic video. It then writes SHA-256 and a smoke-check report.
 
 Expected outputs:
 
@@ -161,9 +185,10 @@ Expected outputs:
 dist\ResiliCapture\ResiliCapture.exe
 dist\ResiliCapture-0.7.0-Windows.zip
 dist\ResiliCapture-0.7.0-Windows.zip.sha256
+dist\package-smoke.json
 ```
 
-UPX is disabled for release builds.
+UPX is disabled for release builds. Public ZIPs exclude arbitrary local FFmpeg binaries and include the separate download helper. Upload the ZIP and checksum together, never just the one-folder EXE. Release engineering instructions are in [docs/windows-release.md](docs/windows-release.md).
 
 ## Keyboard controls
 
@@ -182,7 +207,7 @@ The test suite covers recording/finalization, timelapse, live focus, quality def
 test_windows.bat
 ```
 
-GitHub Actions validates the project on Windows with Python 3.11, 3.12, and 3.13 and also performs a PyInstaller package smoke build.
+GitHub Actions validates the project on Windows with Python 3.11, 3.12, and 3.13 and also launches the packaged executable after extracting the actual ZIP with an isolated PATH to test Tk/assets and synthetic MJPEG encoding/decoding. The release workflow additionally checks packaged H.264 finalization and MP4 decoding using test-only FFmpeg. This does not replace real desktop recording or long hardware soak tests.
 
 ## Migrating from pre-release FocusFlow builds
 
